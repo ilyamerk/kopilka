@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Копилка на мечту</title>
+  <meta name="description" content="Копи на цель и смотри свой прогресс: несколько копилок, история пополнений и прогноз «Когда я накоплю?».">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐷</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header__inner">
+      <div class="logo">
+        <span class="logo__icon" aria-hidden="true">🐷</span>
+        <div>
+          <h1 class="logo__title">Копилка на мечту</h1>
+          <p class="logo__subtitle">Откладывай регулярно — и смотри, как мечта становится ближе</p>
+        </div>
+      </div>
+      <button class="btn btn--primary" id="btn-new-goal" type="button">+ Новая мечта</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Общая сводка по всем копилкам -->
+    <section class="summary" id="summary" aria-label="Сводка">
+      <div class="summary__item">
+        <span class="summary__label">Копилок</span>
+        <span class="summary__value" id="sum-count">0</span>
+      </div>
+      <div class="summary__item">
+        <span class="summary__label">Всего накоплено</span>
+        <span class="summary__value" id="sum-saved">0 ₽</span>
+      </div>
+      <div class="summary__item">
+        <span class="summary__label">Всего осталось</span>
+        <span class="summary__value" id="sum-left">0 ₽</span>
+      </div>
+    </section>
+
+    <!-- Пустое состояние -->
+    <section class="empty card" id="empty" hidden>
+      <div class="empty__icon" aria-hidden="true">🌱</div>
+      <h2>Здесь пока нет ни одной мечты</h2>
+      <p>Создай первую копилку: придумай цель, укажи её стоимость — и начинай откладывать.</p>
+      <div class="empty__actions">
+        <button class="btn btn--primary" id="btn-empty-new" type="button">+ Создать мечту</button>
+        <button class="btn btn--ghost" id="btn-demo" type="button">Заполнить примером</button>
+      </div>
+    </section>
+
+    <div class="layout" id="layout" hidden>
+      <!-- Список копилок -->
+      <aside class="goals" aria-label="Мои копилки">
+        <h2 class="section-title">Мои копилки</h2>
+        <ul class="goals__list" id="goals-list"></ul>
+      </aside>
+
+      <!-- Выбранная копилка -->
+      <section class="details" id="details" aria-live="polite">
+        <article class="card goal">
+          <div class="goal__head">
+            <span class="goal__emoji" id="d-emoji"></span>
+            <div class="goal__titles">
+              <h2 class="goal__name" id="d-name"></h2>
+              <span class="goal__badge" id="d-badge" hidden>Цель достигнута 🎉</span>
+            </div>
+            <div class="goal__actions">
+              <button class="icon-btn" id="btn-edit" type="button" title="Изменить" aria-label="Изменить копилку">✏️</button>
+              <button class="icon-btn" id="btn-delete" type="button" title="Удалить" aria-label="Удалить копилку">🗑️</button>
+            </div>
+          </div>
+
+          <dl class="stats">
+            <div class="stats__item">
+              <dt>Цель</dt>
+              <dd id="d-target"></dd>
+            </div>
+            <div class="stats__item">
+              <dt>Накоплено</dt>
+              <dd id="d-saved" class="accent"></dd>
+            </div>
+            <div class="stats__item">
+              <dt>Осталось</dt>
+              <dd id="d-left"></dd>
+            </div>
+          </dl>
+
+          <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="d-progress">
+            <div class="progress__fill" id="d-fill"></div>
+          </div>
+          <div class="progress__caption">
+            <span>Прогресс</span>
+            <strong id="d-percent">0%</strong>
+          </div>
+        </article>
+
+        <div class="details__grid">
+          <!-- Добавить накопление -->
+          <article class="card">
+            <h3 class="card__title">💰 Добавить накопление</h3>
+            <form id="deposit-form" class="form" novalidate>
+              <label class="field">
+                <span class="field__label">Сумма, ₽</span>
+                <input class="input" id="dep-amount" name="amount" inputmode="decimal" autocomplete="off" placeholder="5 000" required>
+              </label>
+              <label class="field">
+                <span class="field__label">Дата</span>
+                <input class="input" id="dep-date" name="date" type="date" required>
+              </label>
+              <label class="field">
+                <span class="field__label">Комментарий <em>(необязательно)</em></span>
+                <input class="input" id="dep-note" name="note" maxlength="60" placeholder="Например: премия">
+              </label>
+              <div class="quick" aria-label="Быстрые суммы">
+                <button type="button" class="chip" data-quick="500">+500</button>
+                <button type="button" class="chip" data-quick="1000">+1 000</button>
+                <button type="button" class="chip" data-quick="5000">+5 000</button>
+                <button type="button" class="chip" data-quick="10000">+10 000</button>
+              </div>
+              <p class="form__error" id="dep-error" role="alert"></p>
+              <button class="btn btn--primary btn--block" type="submit">+ Добавить накопление</button>
+            </form>
+          </article>
+
+          <!-- Когда я накоплю? -->
+          <article class="card forecast">
+            <h3 class="card__title">⏳ Когда я накоплю?</h3>
+            <form id="forecast-form" class="form" novalidate>
+              <label class="field">
+                <span class="field__label">Могу откладывать в месяц, ₽</span>
+                <input class="input" id="fc-monthly" inputmode="decimal" autocomplete="off" placeholder="10 000">
+              </label>
+            </form>
+            <div class="forecast__result" id="fc-result"></div>
+          </article>
+        </div>
+
+        <!-- История -->
+        <article class="card">
+          <h3 class="card__title">📜 История пополнений</h3>
+          <ul class="history" id="history"></ul>
+          <p class="muted" id="history-empty">Пополнений пока нет — добавь первое!</p>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">Данные хранятся только в твоём браузере · «Копилка на мечту», 2026</div>
+  </footer>
+
+  <!-- Создание / редактирование копилки -->
+  <dialog class="modal" id="goal-dialog" aria-labelledby="goal-dialog-title">
+    <form method="dialog" class="form" id="goal-form" novalidate>
+      <h2 class="modal__title" id="goal-dialog-title">Новая мечта</h2>
+
+      <fieldset class="field">
+        <legend class="field__label">Иконка</legend>
+        <div class="emoji-picker" id="emoji-picker"></div>
+      </fieldset>
+
+      <label class="field">
+        <span class="field__label">Название мечты</span>
+        <input class="input" id="g-name" maxlength="40" placeholder="Поездка в Японию" required>
+      </label>
+      <label class="field">
+        <span class="field__label">Стоимость цели, ₽</span>
+        <input class="input" id="g-target" inputmode="decimal" autocomplete="off" placeholder="200 000" required>
+      </label>
+      <label class="field" id="g-initial-field">
+        <span class="field__label">Уже накоплено, ₽ <em>(необязательно)</em></span>
+        <input class="input" id="g-initial" inputmode="decimal" autocomplete="off" placeholder="0">
+      </label>
+      <label class="field">
+        <span class="field__label">Могу откладывать в месяц, ₽ <em>(необязательно)</em></span>
+        <input class="input" id="g-monthly" inputmode="decimal" autocomplete="off" placeholder="10 000">
+      </label>
+
+      <p class="form__error" id="g-error" role="alert"></p>
+
+      <div class="modal__actions">
+        <button class="btn btn--ghost" type="button" id="g-cancel">Отмена</button>
+        <button class="btn btn--primary" type="submit" id="g-submit">Создать</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/calc.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
