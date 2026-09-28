@@ -67,7 +67,6 @@ h1, h2, h3 { margin: 0; line-height: 1.2; }
 .logo { display: flex; align-items: center; gap: 14px; }
 
 .logo__icon {
-  font-size: 34px;
   width: 60px;
   height: 60px;
   display: grid;
@@ -77,6 +76,7 @@ h1, h2, h3 { margin: 0; line-height: 1.2; }
   box-shadow: var(--shadow);
 }
 
+.logo__icon img { width: 36px; height: 36px; }
 .logo__title { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
 .logo__subtitle { margin: 2px 0 0; color: var(--text-soft); font-size: 15px; }
 
@@ -189,7 +189,7 @@ h1, h2, h3 { margin: 0; line-height: 1.2; }
   padding-bottom: 40px;
 }
 
-/* ===== Список копилок ===== */
+/* ===== Список целей ===== */
 .goals { position: sticky; top: 16px; }
 
 .goals__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
@@ -203,7 +203,7 @@ h1, h2, h3 { margin: 0; line-height: 1.2; }
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 4px 12px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
@@ -213,7 +213,14 @@ h1, h2, h3 { margin: 0; line-height: 1.2; }
 .goal-item:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
 .goal-item.is-active { border-color: var(--mint-400); background: var(--mint-50); }
 
-.goal-item__emoji { font-size: 26px; grid-row: span 2; }
+.goal-item__pic {
+  grid-row: span 2;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+}
+.goal-item__pic .dream__img { max-width: 46px; max-height: 46px; }
 .goal-item__name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .goal-item__pct { font-weight: 800; color: var(--mint-600); }
 .goal-item__bar {
@@ -230,7 +237,7 @@ h1, h2, h3 { margin: 0; line-height: 1.2; }
   border-radius: inherit;
 }
 
-/* ===== Детали копилки ===== */
+/* ===== Детали мечты ===== */
 .details { display: grid; gap: 20px; min-width: 0; }
 
 .details__grid {
@@ -239,17 +246,7 @@ h1, h2, h3 { margin: 0; line-height: 1.2; }
   gap: 20px;
 }
 
-.goal__head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
-.goal__emoji {
-  font-size: 40px;
-  width: 68px;
-  height: 68px;
-  display: grid;
-  place-items: center;
-  background: var(--mint-50);
-  border-radius: 20px;
-  flex-shrink: 0;
-}
+.goal__head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; }
 .goal__titles { flex: 1; min-width: 0; }
 .goal__name { font-size: 26px; font-weight: 800; overflow-wrap: anywhere; }
 .goal__badge {
@@ -264,44 +261,113 @@ h1, h2, h3 { margin: 0; line-height: 1.2; }
 }
 .goal__actions { display: flex; gap: 8px; }
 
-.stats {
+.goal__body {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin: 0 0 20px;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
 }
-.stats__item {
-  background: var(--mint-50);
-  border-radius: var(--radius-sm);
-  padding: 12px 14px;
-}
-.stats dt { font-size: 13px; color: var(--text-soft); }
-.stats dd { margin: 2px 0 0; font-size: 20px; font-weight: 800; }
 
-/* Прогресс-бар */
-.progress {
-  height: 22px;
-  background: var(--mint-100);
-  border-radius: 99px;
-  overflow: hidden;
-  position: relative;
+.goal__pct { margin-bottom: 14px; }
+.goal__pct strong {
+  display: block;
+  font-size: 52px;
+  line-height: 1;
+  font-weight: 800;
+  color: var(--mint-600);
+  letter-spacing: -0.03em;
 }
-.progress__fill {
-  height: 100%;
-  width: 0;
-  border-radius: inherit;
-  background:
-    repeating-linear-gradient(-45deg, rgba(255,255,255,.18) 0 10px, transparent 10px 20px),
-    linear-gradient(90deg, var(--mint-300), var(--mint-500));
-  transition: width .6s cubic-bezier(.2, .8, .2, 1);
-}
-.progress__caption {
+.goal__pct span { color: var(--text-soft); }
+
+.stats { display: grid; gap: 8px; margin: 0; }
+.stats__item {
   display: flex;
   justify-content: space-between;
-  margin-top: 8px;
-  color: var(--text-soft);
+  align-items: baseline;
+  gap: 12px;
+  background: var(--mint-50);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
 }
-.progress__caption strong { color: var(--mint-600); font-size: 20px; }
+.stats dt { font-size: 14px; color: var(--text-soft); }
+.stats dd { margin: 0; font-size: 19px; font-weight: 800; white-space: nowrap; }
+
+/* ===== Картинка мечты, которая наполняется цветом =====
+   Два одинаковых слоя: снизу бледный (ч/б и прозрачный), сверху цветной,
+   обрезанный clip-path так, что видна только нижняя часть = процент накоплений. */
+.stage {
+  display: grid;
+  place-items: center;
+  min-height: 340px;
+  padding: 28px 24px;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(closest-side, #ffffff, transparent),
+    linear-gradient(160deg, var(--mint-50), var(--mint-100));
+}
+
+.dream {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  line-height: 0;
+}
+
+.dream__img {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.stage .dream__img { max-height: 300px; }
+
+.dream__img--dim { filter: grayscale(1) opacity(.3); }
+
+.dream__img--color {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none !important;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1s cubic-bezier(.3, .8, .3, 1);
+}
+
+/* Линия «уровня» — где сейчас граница цвета */
+.dream__level {
+  position: absolute;
+  left: -14px;
+  right: -14px;
+  bottom: 0;
+  border-top: 2px dashed var(--mint-500);
+  opacity: 0;
+  transition: bottom 1s cubic-bezier(.3, .8, .3, 1), opacity .3s;
+}
+.dream__level::before,
+.dream__level::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--mint-500);
+  box-shadow: 0 0 0 4px rgba(87, 173, 118, .2);
+}
+.dream__level::before { left: -5px; }
+.dream__level::after { right: -5px; }
+.dream.has-level .dream__level { opacity: 1; }
+
+.dream.is-done { animation: dream-float 3.2s ease-in-out infinite; }
+.dream.is-done .dream__img--color { filter: drop-shadow(0 10px 22px rgba(87, 173, 118, .45)); }
+
+@keyframes dream-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
 
 /* ===== Формы ===== */
 .form { display: grid; gap: 12px; }
@@ -390,17 +456,39 @@ h1, h2, h3 { margin: 0; line-height: 1.2; }
 .modal__title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
 .modal__actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
 
-.emoji-picker { display: flex; flex-wrap: wrap; gap: 6px; }
-.emoji-picker button {
-  font-size: 22px;
-  width: 44px;
-  height: 44px;
+.picker { display: flex; flex-wrap: wrap; gap: 6px; }
+.picker button {
+  width: 48px;
+  height: 48px;
+  padding: 6px;
+  display: grid;
+  place-items: center;
   border-radius: 12px;
   border: 2px solid transparent;
   background: var(--mint-50);
   cursor: pointer;
+  font: inherit;
 }
-.emoji-picker button[aria-pressed="true"] { border-color: var(--mint-400); background: var(--mint-100); }
+.picker button:hover { background: var(--mint-100); }
+.picker button[aria-pressed="true"] { border-color: var(--mint-400); background: var(--mint-100); }
+.picker img { display: block; max-width: 34px; max-height: 34px; width: auto; height: auto; }
+.picker .picker__photo {
+  width: auto;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--mint-600);
+  border: 2px dashed var(--mint-300);
+  background: #fff;
+}
+.picker .picker__photo img {
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.picker .picker__photo:has(img) { padding: 5px; }
+.field__hint { margin: 2px 0 0; font-size: 13px; color: var(--text-soft); }
 
 /* ===== Тост ===== */
 .toast {
@@ -458,8 +546,11 @@ h1, h2, h3 { margin: 0; line-height: 1.2; }
   .summary__item { flex-direction: row; justify-content: space-between; align-items: baseline; }
   .summary__value { font-size: 18px; }
   .details__grid { grid-template-columns: 1fr; }
-  .stats { grid-template-columns: 1fr; }
-  .stats__item { display: flex; justify-content: space-between; align-items: baseline; }
+  .goal__body { grid-template-columns: 1fr; gap: 16px; }
+  .stage { min-height: 280px; padding: 22px 18px; }
+  .stage .dream__img { max-height: 240px; }
+  .goal__pct { display: flex; align-items: baseline; gap: 10px; }
+  .goal__pct strong { font-size: 40px; }
   .goal__name { font-size: 22px; }
   .history__item { grid-template-columns: 1fr auto auto; }
   .history__note { grid-column: 1 / -1; grid-row: 2; }

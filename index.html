@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Копилка на мечту</title>
-  <meta name="description" content="Копи на цель и смотри свой прогресс: несколько копилок, история пополнений и прогноз «Когда я накоплю?».">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐷</text></svg>">
+  <title>Раскрась мечту</title>
+  <meta name="description" content="Копи на мечту и смотри, как её картинка наполняется цветом: несколько целей, история пополнений и прогноз «Когда я накоплю?».">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -15,10 +15,10 @@
   <header class="header">
     <div class="container header__inner">
       <div class="logo">
-        <span class="logo__icon" aria-hidden="true">🐷</span>
+        <span class="logo__icon" aria-hidden="true"><img src="img/dreams/1f3a8.svg" alt=""></span>
         <div>
-          <h1 class="logo__title">Копилка на мечту</h1>
-          <p class="logo__subtitle">Откладывай регулярно — и смотри, как мечта становится ближе</p>
+          <h1 class="logo__title">Раскрась мечту</h1>
+          <p class="logo__subtitle">Каждое пополнение добавляет цвета твоей мечте</p>
         </div>
       </div>
       <button class="btn btn--primary" id="btn-new-goal" type="button">+ Новая мечта</button>
@@ -26,10 +26,10 @@
   </header>
 
   <main class="container">
-    <!-- Общая сводка по всем копилкам -->
+    <!-- Общая сводка по всем мечтам -->
     <section class="summary" id="summary" aria-label="Сводка">
       <div class="summary__item">
-        <span class="summary__label">Копилок</span>
+        <span class="summary__label">Мечты</span>
         <span class="summary__value" id="sum-count">0</span>
       </div>
       <div class="summary__item">
@@ -46,7 +46,7 @@
     <section class="empty card" id="empty" hidden>
       <div class="empty__icon" aria-hidden="true">🌱</div>
       <h2>Здесь пока нет ни одной мечты</h2>
-      <p>Создай первую копилку: придумай цель, укажи её стоимость — и начинай откладывать.</p>
+      <p>Выбери картинку мечты, укажи её стоимость и начинай откладывать. Пока картинка бледная — с каждым пополнением она будет наполняться цветом.</p>
       <div class="empty__actions">
         <button class="btn btn--primary" id="btn-empty-new" type="button">+ Создать мечту</button>
         <button class="btn btn--ghost" id="btn-demo" type="button">Заполнить примером</button>
@@ -54,48 +54,56 @@
     </section>
 
     <div class="layout" id="layout" hidden>
-      <!-- Список копилок -->
-      <aside class="goals" aria-label="Мои копилки">
-        <h2 class="section-title">Мои копилки</h2>
+      <!-- Список целей -->
+      <aside class="goals" aria-label="Мои мечты">
+        <h2 class="section-title">Мои мечты</h2>
         <ul class="goals__list" id="goals-list"></ul>
       </aside>
 
-      <!-- Выбранная копилка -->
+      <!-- Выбранная мечта -->
       <section class="details" id="details" aria-live="polite">
         <article class="card goal">
           <div class="goal__head">
-            <span class="goal__emoji" id="d-emoji"></span>
             <div class="goal__titles">
               <h2 class="goal__name" id="d-name"></h2>
-              <span class="goal__badge" id="d-badge" hidden>Цель достигнута 🎉</span>
+              <span class="goal__badge" id="d-badge" hidden>Мечта накоплена 🎉</span>
             </div>
             <div class="goal__actions">
-              <button class="icon-btn" id="btn-edit" type="button" title="Изменить" aria-label="Изменить копилку">✏️</button>
-              <button class="icon-btn" id="btn-delete" type="button" title="Удалить" aria-label="Удалить копилку">🗑️</button>
+              <button class="icon-btn" id="btn-edit" type="button" title="Изменить" aria-label="Изменить мечту">✏️</button>
+              <button class="icon-btn" id="btn-delete" type="button" title="Удалить" aria-label="Удалить мечту">🗑️</button>
             </div>
           </div>
 
-          <dl class="stats">
-            <div class="stats__item">
-              <dt>Цель</dt>
-              <dd id="d-target"></dd>
+          <div class="goal__body">
+            <!-- Картинка мечты: бледная, наполняется цветом снизу вверх по мере накоплений -->
+            <div class="stage">
+              <div class="dream" id="d-dream" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                <img class="dream__img dream__img--dim" id="d-img-dim" alt="">
+                <img class="dream__img dream__img--color" id="d-img-color" alt="">
+                <span class="dream__level" aria-hidden="true"></span>
+              </div>
             </div>
-            <div class="stats__item">
-              <dt>Накоплено</dt>
-              <dd id="d-saved" class="accent"></dd>
-            </div>
-            <div class="stats__item">
-              <dt>Осталось</dt>
-              <dd id="d-left"></dd>
-            </div>
-          </dl>
 
-          <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="d-progress">
-            <div class="progress__fill" id="d-fill"></div>
-          </div>
-          <div class="progress__caption">
-            <span>Прогресс</span>
-            <strong id="d-percent">0%</strong>
+            <div class="goal__info">
+              <div class="goal__pct">
+                <strong id="d-percent">0%</strong>
+                <span>мечты уже в цвете</span>
+              </div>
+              <dl class="stats">
+                <div class="stats__item">
+                  <dt>Цель</dt>
+                  <dd id="d-target"></dd>
+                </div>
+                <div class="stats__item">
+                  <dt>Накоплено</dt>
+                  <dd id="d-saved" class="accent"></dd>
+                </div>
+                <div class="stats__item">
+                  <dt>Осталось</dt>
+                  <dd id="d-left"></dd>
+                </div>
+              </dl>
+            </div>
           </div>
         </article>
 
@@ -151,17 +159,19 @@
   </main>
 
   <footer class="footer">
-    <div class="container">Данные хранятся только в твоём браузере · «Копилка на мечту», 2026</div>
+    <div class="container">Данные хранятся только в твоём браузере · «Раскрась мечту», 2026 · Иллюстрации: <a href="https://github.com/jdecked/twemoji" target="_blank" rel="noopener">Twemoji</a> (CC&nbsp;BY&nbsp;4.0)</div>
   </footer>
 
-  <!-- Создание / редактирование копилки -->
+  <!-- Создание / редактирование мечты -->
   <dialog class="modal" id="goal-dialog" aria-labelledby="goal-dialog-title">
     <form method="dialog" class="form" id="goal-form" novalidate>
       <h2 class="modal__title" id="goal-dialog-title">Новая мечта</h2>
 
       <fieldset class="field">
-        <legend class="field__label">Иконка</legend>
-        <div class="emoji-picker" id="emoji-picker"></div>
+        <legend class="field__label">Картинка мечты</legend>
+        <div class="picker" id="emoji-picker"></div>
+        <input type="file" id="g-photo" accept="image/*" hidden>
+        <p class="field__hint">Можно загрузить фото своей мечты — например, того самого телефона.</p>
       </fieldset>
 
       <label class="field">
@@ -193,6 +203,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="js/calc.js"></script>
+  <script src="js/dreams.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
