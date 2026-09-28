@@ -35,10 +35,12 @@
   }
 
   // Процент выполнения, не больше 100, с точностью до десятых.
+  // 100% показываем только когда цель реально достигнута (99 960 из 100 000 — это 99,9%).
   function progress(saved, target) {
     if (!(target > 0)) return 0;
-    const p = (saved / target) * 100;
-    return Math.min(100, Math.round(p * 10) / 10);
+    if (saved >= target) return 100;
+    const p = Math.round((saved / target) * 1000) / 10;
+    return Math.min(99.9, p);
   }
 
   function formatPercent(p) {

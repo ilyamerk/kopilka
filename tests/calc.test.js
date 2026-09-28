@@ -70,3 +70,9 @@ test('форматирование денег', () => {
   assert.equal(C.formatMoney(126000), '126 000 ₽');
   assert.equal(C.formatMoney(1500.5), '1 500,50 ₽');
 });
+
+test('100% только при реально достигнутой цели', () => {
+  assert.equal(C.progress(99960, 100000), 99.9);
+  assert.equal(C.progress(100000, 100000), 100);
+  assert.equal(C.progress(0, 100000), 0);
+});
