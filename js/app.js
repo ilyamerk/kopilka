@@ -16,6 +16,7 @@
   let shownGoalId = null;
   let fillDelay = 0;
   let fillTimer = null;
+  let photoToken = 0; // «поколение» выбора фото: устаревшие результаты декодирования игнорируются
 
   function uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -254,13 +255,18 @@
     return true;
   }
 
+  // Возвращает null, если сохранить не удалось (пополнение откатывается),
+  // иначе — была ли прокрутка к картинке.
   function addDeposit(goal, amount, date, note) {
     const wasDone = goalNumbers(goal).left <= 0;
-    const scrolled = revealDream();
     const dep = { id: uid(), amount, date, note: note || '', createdAt: Date.now() };
     goal.deposits.push(dep);
+    if (!save(true)) {
+      goal.deposits.pop();
+      return null;
+    }
+    const scrolled = revealDream();
     lastAddedId = dep.id;
-    save();
     render();
     if (!wasDone && goalNumbers(goal).left <= 0) celebrate(goal);
     else toast('+' + C.formatMoney(amount) + ' к мечте «' + goal.name + '»');
@@ -315,6 +321,7 @@
   }
 
   function openGoalDialog(goal) {
+    photoToken++;
     editingId = goal ? goal.id : null;
     pickedEmoji = goal && D.isKnown(goal.emoji) ? goal.emoji : D.DEFAULT_EMOJI;
     pickedImage = goal && goal.image ? goal.image : null;
@@ -443,6 +450,7 @@
   $('btn-empty-new').addEventListener('click', () => openGoalDialog(null));
   $('btn-demo').addEventListener('click', fillDemo);
   $('g-cancel').addEventListener('click', () => el.dialog.close());
+  el.dialog.addEventListener('close', () => { photoToken++; });
 
   el.goalForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -456,6 +464,7 @@
       el.gPhoto.click();
       return;
     }
+    photoToken++;
     pickedEmoji = b.dataset.emoji;
     pickedImage = null;
     renderPicker();
@@ -465,11 +474,14 @@
     const file = el.gPhoto.files[0];
     el.gPhoto.value = '';
     if (!file) return;
+    const token = ++photoToken;
     readPhoto(file).then((data) => {
+      if (token !== photoToken) return; // пользователь уже выбрал другое или закрыл окно
       pickedImage = data;
       setError(el.gError, '');
       renderPicker();
     }, () => {
+      if (token !== photoToken) return;
       setError(el.gError, 'Не получилось открыть это фото — попробуй JPG или PNG');
     });
   });
@@ -505,6 +517,9 @@
     if (date > C.todayISO()) return setError(el.depError, 'Дата пополнения не может быть в будущем', el.depDate);
     setError(el.depError, '');
     const scrolled = addDeposit(activeGoal(), amount, date, el.depNote.value.trim());
+    if (scrolled === null) {
+      return setError(el.depError, 'Не удалось сохранить пополнение: память браузера заполнена. Удали лишние фото мечт и попробуй ещё раз.');
+    }
     el.depAmount.value = '';
     el.depNote.value = '';
     if (scrolled) el.depAmount.blur(); // не прыгаем обратно к форме и прячем клавиатуру на телефоне
