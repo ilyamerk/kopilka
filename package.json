@@ -1,10 +1,10 @@
 {
-  "name": "kopilka",
-  "version": "1.0.0",
+  "name": "trecker-rashody",
   "private": true,
-  "description": "Копилка на мечту — сайт для накоплений на цель",
+  "description": "Личный трекер расходов и доходов — PWA без сервера, синхронизация через приватный GitHub-репозиторий",
+  "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "start": "python3 -m http.server 8080"
+    "start": "python3 -m http.server 8080 -d app"
   }
 }

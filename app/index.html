@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="MONETA">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="description" content="MONETA. Твои деньги. Твои цели. Твой контроль. Расходы и доходы, аналитика и копилки на мечту — данные хранятся на устройстве и в твоём приватном репозитории.">
+  <title>MONETA</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <div class="brand">
+    <div class="brand-name">MONETA<span>.</span></div>
+    <div class="brand-tagline">Твои деньги. Твои цели. Твой контроль.</div>
+  </div>
+  <header class="topbar">
+    <h1 id="title">Финансы</h1>
+    <div class="month-switch" id="monthSwitch">
+      <button type="button" class="icon-btn" data-action="month" data-delta="-1" aria-label="Предыдущий месяц">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <button type="button" class="month-label" id="monthLabel" data-action="month-now" title="К текущему месяцу"></button>
+      <button type="button" class="icon-btn" data-action="month" data-delta="1" aria-label="Следующий месяц">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="view-list" class="view" aria-label="Финансы"></section>
+    <section id="view-stats" class="view" aria-label="Аналитика" hidden></section>
+    <section id="view-goals" class="view" aria-label="Накопления" hidden></section>
+    <section id="view-settings" class="view" aria-label="Настройки" hidden></section>
+  </main>
+
+  <button type="button" class="fab" id="fab" data-action="add" aria-label="Добавить">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+
+  <nav class="tabbar" aria-label="Разделы">
+    <button type="button" class="tab" data-action="tab" data-tab="list">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="14" rx="3"/><path d="M2.5 10h19M6.5 15h4"/></svg>
+      <span>Финансы</span>
+      <span class="dot" id="debtDot" hidden></span>
+    </button>
+    <button type="button" class="tab" data-action="tab" data-tab="stats">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M6.5 16.5v-5M11.5 16.5V5M16.5 16.5v-8"/></svg>
+      <span>Аналитика</span>
+    </button>
+    <button type="button" class="tab" data-action="tab" data-tab="goals">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11.5a7 6 0 0 1 12.2-4l2.3-1v3.6a6 6 0 0 1 .5 1.4h1.5v4h-2.2a7 7 0 0 1-2.3 2.3V21h-3v-1.6h-4V21H7v-2.4a6.4 6.4 0 0 1-2-7.1z"/><path d="M9.5 7.6h3.5"/><path d="M15.5 11h.01"/></svg>
+      <span>Накопления</span>
+    </button>
+    <button type="button" class="tab" data-action="tab" data-tab="settings">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+      <span>Настройки</span>
+      <span class="dot" id="syncDot" hidden></span>
+    </button>
+  </nav>
+
+  <dialog id="sheet" class="sheet" aria-labelledby="sheetTitle"></dialog>
+  <dialog id="confirm" class="confirm" aria-labelledby="confirmTitle"></dialog>
+  <div id="lock" class="lock" hidden></div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="tip" class="tip" role="tooltip" hidden></div>
+
+  <noscript>Для работы приложения нужен JavaScript.</noscript>
+</body>
+</html>
