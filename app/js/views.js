@@ -400,6 +400,12 @@ export function renderSettings(build) {
     </div>
     <p class="note">Данные в GitHub-репозитории при этом останутся.</p>
 
-    <p class="version"><b>MONETA.</b> Твои деньги. Твои цели. Твой контроль.<br>версия ${build}</p>
+    <p class="version">
+      <img src="icons/mark.svg" alt="">
+      <b>MONETA</b><br>
+      Твои деньги. Твои цели. Твой контроль.<br>
+      <span class="sections">Финансы<i></i>Аналитика<i></i>Накопления</span><br>
+      версия ${build}
+    </p>
   `;
 }

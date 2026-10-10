@@ -1,53 +1,60 @@
 /* MONETA. Светлая и тёмная тема — по настройке системы. */
 :root {
   color-scheme: light dark;
-  --bg: #f2f2f7;
+  /* Палитра MONETA — изумрудная, из логотипа */
+  --brand-dark: #0d3b29;
+  --bg: #f3f6f4;
   --card: #ffffff;
-  --fill: #e9e9ee;
-  --text: #0b0b0b;
-  --text-2: #5d5d62;
-  --muted: #86868b;
-  --line: rgba(60, 60, 67, 0.14);
-  --accent: #2a78d6;
-  --accent-text: #1f63b8;
-  --accent-soft: rgba(42, 120, 214, 0.12);
+  --fill: #e6eee9;
+  --text: #0c1d15;
+  --text-2: #4c5c54;
+  --muted: #7a8780;
+  --line: rgba(16, 64, 42, 0.13);
+  --accent: #17704b;
+  --accent-text: #135f3f;
+  --accent-soft: rgba(23, 112, 75, 0.11);
   --on-accent: #ffffff;
-  --income: #0a7d28;
-  --danger: #d03b3b;
-  --danger-soft: rgba(208, 59, 59, 0.1);
+  --income: #0e7a45;
+  --danger: #cf3a3a;
+  --danger-soft: rgba(207, 58, 58, 0.1);
   --warn-soft: rgba(250, 178, 25, 0.18);
-  --series-exp: #2a78d6;
-  --series-inc: #1baf7a;
-  --grid: #e1e0d9;
-  --axis: #c3c2b7;
-  --radius: 16px;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 16px rgba(0, 0, 0, 0.04);
+  --series-exp: #17704b;
+  --series-inc: #5cc794;
+  --grid: #e1e8e3;
+  --axis: #c1cbc5;
+  --radius: 18px;
+  --shadow: 0 1px 2px rgba(13, 59, 41, 0.05), 0 6px 20px rgba(13, 59, 41, 0.06);
   --font: system-ui, -apple-system, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+  --font-brand: 'Montserrat', var(--font);
   --tabbar-h: 58px;
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-t: env(safe-area-inset-top, 0px);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #000000;
-    --card: #1c1c1e;
-    --fill: #2c2c2e;
-    --text: #ffffff;
-    --text-2: #c3c2c7;
-    --muted: #8d8d93;
-    --line: rgba(84, 84, 88, 0.55);
-    --accent: #3987e5;
-    --accent-text: #6da7ec;
-    --accent-soft: rgba(57, 135, 229, 0.2);
-    --income: #30c35a;
+    --brand-dark: #e9f5ef;
+    --bg: #040806;
+    --card: #111a15;
+    --fill: #1c2721;
+    --text: #f1f7f3;
+    --text-2: #bfcbc4;
+    --muted: #85938b;
+    --line: rgba(120, 170, 145, 0.2);
+    --accent: #3db682;
+    --accent-text: #6fd3a3;
+    --accent-soft: rgba(61, 182, 130, 0.17);
+    --on-accent: #03140b;
+    --income: #4ccf8e;
     --danger: #ff6b6b;
     --danger-soft: rgba(255, 107, 107, 0.14);
     --warn-soft: rgba(250, 178, 25, 0.16);
-    --series-exp: #3987e5;
-    --series-inc: #199e70;
-    --grid: #2c2c2a;
-    --axis: #48484a;
+    --series-exp: #2fa06c;
+    --series-inc: #95e0bb;
+    --grid: #1f2a24;
+    --axis: #3a4a41;
     --shadow: none;
   }
 }
@@ -77,10 +84,10 @@ a { color: var(--accent-text); }
 .small { font-size: 13px; }
 
 /* ---------- Каркас ---------- */
-.brand { max-width: 680px; margin: 0 auto; padding: 12px 16px 0; }
-.brand-name { font-size: 15px; font-weight: 800; letter-spacing: 0.18em; }
-.brand-name span { color: var(--accent); }
-.brand-tagline { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.brand { display: flex; align-items: center; gap: 10px; max-width: 680px; margin: 0 auto; padding: 14px 16px 0; animation: rise 0.5s var(--ease-out) both; }
+.brand-mark { width: 34px; height: 33px; flex: none; }
+.brand-name { font-family: var(--font-brand); font-size: 17px; font-weight: 600; letter-spacing: 0.16em; color: var(--brand-dark); line-height: 1.1; }
+.brand-tagline { font-size: 12px; color: var(--muted); margin-top: 2px; }
 .topbar {
   position: sticky; top: 0; z-index: 5;
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
@@ -89,7 +96,7 @@ a { color: var(--accent-text); }
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
 }
-.topbar h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+.topbar h1 { margin: 0; font-family: var(--font-brand); font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
 .month-switch { display: flex; align-items: center; gap: 2px; }
 .month-label { padding: 6px 8px; border-radius: 10px; font-weight: 600; font-size: 15px; white-space: nowrap; }
 .month-label.is-past { color: var(--accent-text); }
@@ -125,13 +132,18 @@ body.privacy main, body.privacy .topbar, body.privacy dialog { filter: blur(14px
   width: 58px; height: 58px; border-radius: 50%;
   display: grid; place-items: center;
   background: var(--accent); color: var(--on-accent);
-  box-shadow: 0 6px 20px rgba(42, 120, 214, 0.4);
+  background: linear-gradient(145deg, #2fa06c, var(--accent) 55%, #0f5a3b);
+  box-shadow: 0 8px 22px rgba(23, 112, 75, 0.38);
 }
 .fab svg { width: 28px; height: 28px; stroke-width: 2.4; }
 .fab:active { transform: scale(0.94); }
 
 /* ---------- Карточки и общие элементы ---------- */
 .card { background: var(--card); border-radius: var(--radius); padding: 14px 16px; margin: 12px 0; box-shadow: var(--shadow); }
+/* Сводка в начале раздела — с фирменным изумрудным оттенком */
+.view > .card:first-child, .finance-seg + .card {
+  background: radial-gradient(120% 140% at 100% 0%, var(--accent-soft), transparent 60%), var(--card);
+}
 .card h2, .section-title { margin: 0 0 10px; font-size: 17px; font-weight: 650; }
 .section-title { margin: 22px 4px 8px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
 .card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
@@ -285,7 +297,12 @@ button.item:active { background: var(--fill); }
 .switch input:checked + span { background: #34c759; }
 .switch input:checked + span::after { transform: translateX(20px); }
 .switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
-.version { text-align: center; color: var(--muted); font-size: 12px; margin: 24px 0 8px; }
+.version { text-align: center; color: var(--muted); font-size: 12px; margin: 28px 0 8px; line-height: 1.6; }
+.version img { display: block; width: 44px; height: 43px; margin: 0 auto 8px; }
+.version b { font-family: var(--font-brand); font-weight: 600; letter-spacing: 0.14em; color: var(--brand-dark); }
+.sections { color: var(--text-2); }
+.sections i { display: inline-block; width: 5px; height: 5px; margin: 0 8px; border-radius: 50%; background: var(--accent); vertical-align: 2px; }
+.lock-logo { width: 64px; height: 63px; margin-bottom: 4px; animation: pop 0.5s var(--spring) both; }
 
 /* ---------- Нижняя шторка ---------- */
 dialog { color: var(--text); }
@@ -309,7 +326,7 @@ dialog { color: var(--text); }
   .sheet { margin: auto; border-radius: 20px; max-height: 88dvh; }
 }
 @media (prefers-color-scheme: dark) {
-  .sheet { background: #121214; }
+  .sheet { background: #0a110d; }
 }
 
 .field { display: block; margin: 12px 0; }
@@ -414,7 +431,48 @@ input[type='date'].input { display: flex; align-items: center; }
 @media (prefers-color-scheme: dark) {
   .toast { background: #3a3a3c; }
 }
-.toast button { color: #6da7ec; font-weight: 600; white-space: nowrap; }
+.toast button { color: #7fdcae; font-weight: 600; white-space: nowrap; }
+
+/* ---------- Движение ---------- */
+/* Раздел появляется мягко, карточки — лесенкой */
+.view.enter > * { animation: rise 0.42s var(--ease-out) both; }
+.view.enter > :nth-child(2) { animation-delay: 0.04s; }
+.view.enter > :nth-child(3) { animation-delay: 0.08s; }
+.view.enter > :nth-child(4) { animation-delay: 0.12s; }
+.view.enter > :nth-child(n + 5) { animation-delay: 0.16s; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+
+/* Прогресс «вырастает» при появлении и «доезжает» после пополнения */
+.view.enter .goal-track > i, .view.enter .progress > i { animation: grow 0.9s var(--ease-out) 0.15s both; }
+.progress > i.grow { animation: grow-from 0.9s var(--ease-out) both; }
+@keyframes grow { from { width: 0; } }
+@keyframes grow-from { from { width: var(--from, 0); } }
+
+/* Отклик на нажатие: всё нажимаемое чуть «проседает» */
+.btn, .chip, .seg button, .cat-btn, .tab, .icon-btn, .row, .item, .fab, .key {
+  transition: transform 0.18s var(--ease-out), background-color 0.2s, color 0.2s, filter 0.2s, box-shadow 0.2s;
+}
+.btn:active:not(:disabled), .chip:active, .cat-btn:active, .key:active:not(:disabled) { transform: scale(0.96); }
+.row:active, button.item:active { transform: scale(0.99); }
+.fab { transition: transform 0.3s var(--spring), box-shadow 0.2s; }
+.fab:active { transform: scale(0.9) rotate(90deg); }
+.seg button[aria-pressed='true'] { animation: pop 0.25s var(--ease-out); }
+
+/* Активная вкладка подпрыгивает */
+.tab svg { transition: transform 0.3s var(--spring); }
+.tab[aria-current='page'] svg { transform: translateY(-2px) scale(1.08); }
+.tab:active svg { transform: scale(0.85); }
+
+/* Шторка выезжает с лёгкой пружиной, затемнение плавно проявляется */
+.sheet[open] { animation: sheet-up 0.38s var(--spring); }
+.sheet[open]::backdrop, .confirm[open]::backdrop { animation: fade 0.25s ease both; }
+.confirm[open] { animation: pop 0.28s var(--spring); }
+@keyframes fade { from { opacity: 0; } }
+@keyframes pop { from { transform: scale(0.94); opacity: 0.6; } }
+
+/* Тост выезжает снизу */
+.toast:not([hidden]) { animation: toast-in 0.35s var(--spring); }
+@keyframes toast-in { from { transform: translate(-50%, 16px); opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }

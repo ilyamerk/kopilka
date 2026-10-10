@@ -104,6 +104,21 @@ function forecastHtml(g, monthly) {
 // Взнос в месяц сохраняем с задержкой, пока человек печатает; при закрытии или перерисовке — сразу
 let pendingMonthly = null;
 let shownGoal = null; // какая копилка открыта в шторке — для кнопки «Вернуть»
+let lastShown = null; // { id, saved } — с чего плавно «доезжают» сумма и прогресс после пополнения
+
+// Сумма плавно «досчитывается» до новой
+function countUp(el, from, to, ms = 700) {
+  if (!el || from === to || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const start = performance.now();
+  const step = (now) => {
+    const k = Math.min(1, (now - start) / ms);
+    const eased = 1 - (1 - k) ** 3;
+    el.textContent = money(Math.round(from + (to - from) * eased));
+    if (k < 1 && el.isConnected) requestAnimationFrame(step);
+  };
+  el.textContent = money(from);
+  requestAnimationFrame(step);
+}
 function flushMonthly() {
   const save = pendingMonthly;
   pendingMonthly = null;
@@ -119,15 +134,18 @@ export function openGoalSheet(id) {
   const saved = goalSaved(g);
   const left = goalLeft(g);
   const deposits = sortDeposits(g.deposits);
+  const prev = lastShown?.id === id ? lastShown.saved : null;
+  lastShown = { id, saved };
+  const fromPct = prev === null ? 0 : (Math.min(1, prev / g.target) * 100).toFixed(1);
   const body = openSheet(
     `${g.emoji} ${g.name}`,
     html`
     <div class="hero">
       <div class="muted">Накоплено</div>
-      <div class="big num pos">${money(saved)}</div>
+      <div class="big num pos" id="goalSaved">${money(saved)}</div>
       <div class="muted small num">из ${money(g.target)}${left ? ` · осталось ${money(left)}` : ''}</div>
     </div>
-    <div class="progress tall" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct(g)}" aria-label="Прогресс: ${goalPercent(g)}"><i style="width:${pct(g)}%"></i></div>
+    <div class="progress tall" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct(g)}" aria-label="Прогресс: ${goalPercent(g)}"><i class="grow" style="--from:${fromPct}%;width:${pct(g)}%"></i></div>
     <div class="progress-caption"><span>Прогресс</span><b class="num">${goalPercent(g)}</b></div>
     ${left ? '' : html`<p class="goal-badge">Цель достигнута 🎉</p>`}
 
@@ -180,10 +198,12 @@ export function openGoalSheet(id) {
     {
       onClose: () => {
         shownGoal = null;
+        lastShown = null;
         flushMonthly();
       },
     },
   );
+  if (prev !== null) countUp($('#goalSaved', body), prev, saved);
   const form = $('#depForm', body);
   const renderDate = () => $$('[data-date]', form).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.date === form.date.value)));
   renderDate();

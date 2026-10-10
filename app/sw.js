@@ -25,6 +25,7 @@ const ASSETS = [
   './vendor/qrcode.js',
   './vendor/jsQR.js',
   './icons/icon.svg',
+  './icons/mark.svg',
   './icons/apple-touch-icon.png',
   './icons/icon-192.png',
   './icons/icon-512.png',

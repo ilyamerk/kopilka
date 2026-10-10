@@ -102,6 +102,7 @@ export async function showLock({ onUnlock }) {
   const el = $('#lock');
   const bio = Boolean(state.settings.bio);
   el.innerHTML = html`
+    <img class="lock-logo" src="icons/mark.svg" alt="MONETA">
     <div class="lock-title" id="lockTitle">Введи PIN-код</div>
     ${dots(0)}
     <div class="lock-msg" role="alert"></div>

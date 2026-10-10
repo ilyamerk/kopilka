@@ -44,9 +44,15 @@ const render = () => {
   frame = requestAnimationFrame(renderNow);
 };
 
+// Анимация появления — только при смене раздела, а не на каждую правку данных
+let shownView = null;
+
 function renderNow() {
   if (isLocked()) return;
   const { tab, month } = state.ui;
+  const viewKey = `${tab}:${tab === 'list' ? state.ui.finance : ''}`;
+  const entering = viewKey !== shownView;
+  shownView = viewKey;
   const today = todayISO();
   $('#title').textContent = TITLES[tab];
   const monthSwitch = $('#monthSwitch');
@@ -63,13 +69,22 @@ function renderNow() {
   for (const [name, view] of Object.entries(VIEWS)) {
     const el = $(`#view-${name}`);
     el.hidden = name !== tab;
-    if (name === tab) el.innerHTML = view().s;
+    if (name === tab) {
+      // Без класса до вставки: иначе новые элементы при каждой правке данных проявлялись бы заново
+      el.classList.remove('enter');
+      el.innerHTML = view().s;
+      if (entering) {
+        void el.offsetWidth; // перезапуск анимации
+        el.classList.add('enter');
+      }
+    }
   }
   $('#debtDot').hidden = debtsSummary(state.data.debts, today).overdue === 0;
   $('#syncDot').hidden = state.sync.status !== 'error';
 }
 
 function clearViews() {
+  shownView = null;
   for (const name of Object.keys(VIEWS)) $(`#view-${name}`).innerHTML = '';
 }
 
